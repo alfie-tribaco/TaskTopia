@@ -13,10 +13,10 @@ class _CurrentTaskState extends State<CurrentTask> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
-          const Text('Current Task'),
+          Text('Current Task', style: Theme.of(context).textTheme.bodyLarge),
           Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
@@ -24,16 +24,24 @@ class _CurrentTaskState extends State<CurrentTask> {
                   AppColors().primaryColor,
                   AppColors().gradientEnd
                 ])),
-            padding: EdgeInsets.symmetric(horizontal: 30),
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             width: AppMeasures().getSize(context).width,
-            height: 100,
-            child: const Row(
+            height: 80,
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Text("Name of Task",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(color: AppColors().appWhite)),
                 Text(
-                  "Name of Task",
-                ),
-                Text("5:00")
+                  "5:00",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(color: AppColors().appWhite),
+                )
               ],
             ),
           )

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/shared/widgets/app_bar.dart';
 import 'package:tasktopia/features/home/views/widgets/current_task.dart';
 import 'package:tasktopia/features/home/views/widgets/option_list.dart';
@@ -9,10 +10,14 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
       child: Scaffold(
-        appBar: CustomAppBar(),
-        body: Column(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          backgroundColor: AppColors().primaryColor,
+        ),
+        appBar: const CustomAppBar(),
+        body: const Column(
           children: [OptionList(), CurrentTask(), TaskList()],
         ),
       ),
