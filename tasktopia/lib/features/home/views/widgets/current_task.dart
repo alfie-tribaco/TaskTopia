@@ -20,12 +20,10 @@ class _CurrentTaskState extends State<CurrentTask> {
           Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
-                gradient: LinearGradient(colors: [
-                  AppColors().primaryColor,
-                  AppColors().gradientEnd
-                ])),
+                gradient: LinearGradient(
+                    colors: [AppColors.primaryColor, AppColors.gradientEnd])),
             padding: const EdgeInsets.symmetric(horizontal: 30),
-            width: AppMeasures().getSize(context).width,
+            width: AppMeasures.getSize(context).width,
             height: 80,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -34,13 +32,13 @@ class _CurrentTaskState extends State<CurrentTask> {
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge!
-                        .copyWith(color: AppColors().appWhite)),
+                        .copyWith(color: AppColors.appWhite)),
                 Text(
                   "5:00",
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge!
-                      .copyWith(color: AppColors().appWhite),
+                      .copyWith(color: AppColors.appWhite),
                 )
               ],
             ),

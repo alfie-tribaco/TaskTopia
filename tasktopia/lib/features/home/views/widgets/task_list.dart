@@ -34,10 +34,10 @@ class _TaskListState extends State<TaskList> {
                 children: [
                   InkWell(
                     onTap: () {
+                      pageController.animateToPage(0,
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.easeIn);
                       setState(() {
-                        pageController.animateToPage(0,
-                            duration: Duration(milliseconds: 500),
-                            curve: Curves.easeIn);
                         currentPage = 0;
                       });
                     },
@@ -45,24 +45,24 @@ class _TaskListState extends State<TaskList> {
                       decoration: currentPage == 0
                           ? BoxDecoration(
                               borderRadius: BorderRadius.circular(6),
-                              color: AppColors().primaryColor,
+                              color: AppColors.primaryColor,
                             )
                           : BoxDecoration(
                               borderRadius: BorderRadius.circular(6),
-                              color: AppColors().appWhite,
+                              color: AppColors.appWhite,
                               border: Border.all(
-                                  color: AppColors().primaryColor, width: 3)),
+                                  color: AppColors.primaryColor, width: 3)),
                       height: 40,
-                      width: AppMeasures().getSize(context).width * 0.28,
+                      width: AppMeasures.getSize(context).width * 0.28,
                       child: const Center(child: Text("Habits")),
                     ),
                   ),
                   InkWell(
                     onTap: () {
+                      pageController.animateToPage(1,
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeIn);
                       setState(() {
-                        pageController.animateToPage(1,
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.easeIn);
                         currentPage = 1;
                       });
                     },
@@ -70,24 +70,24 @@ class _TaskListState extends State<TaskList> {
                       decoration: currentPage == 1
                           ? BoxDecoration(
                               borderRadius: BorderRadius.circular(6),
-                              color: AppColors().primaryColor,
+                              color: AppColors.primaryColor,
                             )
                           : BoxDecoration(
                               borderRadius: BorderRadius.circular(6),
-                              color: AppColors().appWhite,
+                              color: AppColors.appWhite,
                               border: Border.all(
-                                  color: AppColors().primaryColor, width: 3)),
+                                  color: AppColors.primaryColor, width: 3)),
                       height: 40,
-                      width: AppMeasures().getSize(context).width * 0.28,
+                      width: AppMeasures.getSize(context).width * 0.28,
                       child: const Center(child: Text("Daily Task")),
                     ),
                   ),
                   InkWell(
                     onTap: () {
+                      pageController.animateToPage(2,
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeIn);
                       setState(() {
-                        pageController.animateToPage(2,
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.easeIn);
                         currentPage = 2;
                       });
                     },
@@ -95,15 +95,15 @@ class _TaskListState extends State<TaskList> {
                       decoration: currentPage == 2
                           ? BoxDecoration(
                               borderRadius: BorderRadius.circular(6),
-                              color: AppColors().primaryColor,
+                              color: AppColors.primaryColor,
                             )
                           : BoxDecoration(
                               borderRadius: BorderRadius.circular(6),
-                              color: AppColors().appWhite,
+                              color: AppColors.appWhite,
                               border: Border.all(
-                                  color: AppColors().primaryColor, width: 3)),
+                                  color: AppColors.primaryColor, width: 3)),
                       height: 40,
-                      width: AppMeasures().getSize(context).width * 0.28,
+                      width: AppMeasures.getSize(context).width * 0.28,
                       child: const Center(child: Text("Reminder")),
                     ),
                   ),
@@ -124,26 +124,26 @@ class _TaskListState extends State<TaskList> {
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(3),
-                          color: AppColors().primaryColor,
+                          color: AppColors.primaryColor,
                         ),
                         padding: const EdgeInsets.all(5),
                         child: Icon(
                           Icons.videogame_asset,
-                          color: AppColors().appWhite,
+                          color: AppColors.appWhite,
                           size: 35,
                         ),
                       ),
                       SizedBox(
-                          width: AppMeasures().getSize(context).width * 0.02),
+                          width: AppMeasures.getSize(context).width * 0.02),
                       Container(
                         padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(3),
-                          color: AppColors().primaryColor,
+                          color: AppColors.primaryColor,
                         ),
                         child: Icon(
                           Icons.edit,
-                          color: AppColors().appWhite,
+                          color: AppColors.appWhite,
                           size: 35,
                         ),
                       ),
@@ -154,12 +154,16 @@ class _TaskListState extends State<TaskList> {
             ),
             Divider(
               thickness: 2,
-              color: AppColors().appBlack,
+              color: AppColors.appBlack,
             ),
             const SizedBox(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Icon(
+                    Icons.expand_rounded,
+                    size: 30,
+                  ),
                   Icon(
                     Icons.sort,
                     size: 30,
@@ -168,8 +172,8 @@ class _TaskListState extends State<TaskList> {
               ),
             ),
             SizedBox(
-              width: AppMeasures().getSize(context).width,
-              height: AppMeasures().getSize(context).height * 0.3,
+              width: AppMeasures.getSize(context).width,
+              height: AppMeasures.getSize(context).height * 0.3,
               child: PageView(controller: pageController, children: [
                 ListView.builder(
                   padding: const EdgeInsets.symmetric(vertical: 16),

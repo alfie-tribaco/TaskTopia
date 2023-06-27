@@ -14,55 +14,55 @@ class _OptionListState extends State<OptionList> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: AppMeasures().getSize(context).width,
-      color: AppColors().appSecondaryWhite,
+      width: AppMeasures.getSize(context).width,
+      color: AppColors.appSecondaryWhite,
       height: 150,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
             SizedBox(
-              width: AppMeasures().getSize(context).width * 0.05,
+              width: AppMeasures.getSize(context).width * 0.05,
             ),
             OptionItem(
                 icon: Icon(
                   Icons.pets,
                   size: 35,
-                  color: AppColors().appWhite,
+                  color: AppColors.appWhite,
                 ),
                 label: 'My Pet'),
             SizedBox(
-              width: AppMeasures().getSize(context).width * 0.05,
+              width: AppMeasures.getSize(context).width * 0.05,
             ),
             OptionItem(
                 icon: Icon(
                   Icons.shop,
                   size: 35,
-                  color: AppColors().appWhite,
+                  color: AppColors.appWhite,
                 ),
                 label: 'Shop'),
             SizedBox(
-              width: AppMeasures().getSize(context).width * 0.05,
+              width: AppMeasures.getSize(context).width * 0.05,
             ),
             OptionItem(
                 icon: Icon(
                   Icons.emoji_events,
                   size: 35,
-                  color: AppColors().appWhite,
+                  color: AppColors.appWhite,
                 ),
                 label: 'Achievements'),
             SizedBox(
-              width: AppMeasures().getSize(context).width * 0.05,
+              width: AppMeasures.getSize(context).width * 0.05,
             ),
             OptionItem(
                 icon: Icon(
                   Icons.settings,
                   size: 35,
-                  color: AppColors().appWhite,
+                  color: AppColors.appWhite,
                 ),
                 label: 'Settings'),
             SizedBox(
-              width: AppMeasures().getSize(context).width * 0.05,
+              width: AppMeasures.getSize(context).width * 0.05,
             ),
           ],
         ),

@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return Consumer<AppThemeToggle>(
       builder: (context, value, child) {
         return MaterialApp(
-          title: AppStrings().appName,
+          title: AppStrings.appName,
           theme:
               value.isLightTheme ? AppTheme().lightTheme : AppTheme().darkTheme,
           home: const HomeScreen(),

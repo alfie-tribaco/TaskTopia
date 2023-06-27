@@ -40,7 +40,7 @@ class _TaskCardState extends State<TaskCard> {
             ),
           ),
           SizedBox(
-            width: AppMeasures().getSize(context).width * 0.02,
+            width: AppMeasures.getSize(context).width * 0.02,
           ),
           Expanded(
             child: Column(

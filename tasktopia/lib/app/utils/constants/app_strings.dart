@@ -1,3 +1,3 @@
 class AppStrings {
-  String appName = "TaskTopia";
+  static const String appName = "TaskTopia";
 }

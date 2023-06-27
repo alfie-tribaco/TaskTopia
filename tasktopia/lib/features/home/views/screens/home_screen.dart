@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
-          backgroundColor: AppColors().primaryColor,
+          backgroundColor: AppColors.primaryColor,
         ),
         appBar: const CustomAppBar(),
         body: const Column(

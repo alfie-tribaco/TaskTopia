@@ -16,7 +16,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: AppMeasures().getSize(context).width,
+      width: AppMeasures.getSize(context).width,
       height: widget.preferredSize.height,
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -31,7 +31,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 children: [
                   const Text('250'),
                   SizedBox(
-                    width: AppMeasures().getSize(context).width * 0.02,
+                    width: AppMeasures.getSize(context).width * 0.02,
                   ),
                   SvgPicture.asset('assets/topia_coin.svg'),
                 ],
