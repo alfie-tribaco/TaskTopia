@@ -17,7 +17,7 @@ class OptionItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 30),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                     colors: [AppColors.primaryColor, AppColors.gradientEnd])),
             child: icon,
           ),

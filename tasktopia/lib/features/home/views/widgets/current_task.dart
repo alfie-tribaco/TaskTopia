@@ -20,7 +20,7 @@ class _CurrentTaskState extends State<CurrentTask> {
           Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                     colors: [AppColors.primaryColor, AppColors.gradientEnd])),
             padding: const EdgeInsets.symmetric(horizontal: 30),
             width: AppMeasures.getSize(context).width,

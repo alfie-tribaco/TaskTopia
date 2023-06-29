@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
-import 'package:tasktopia/features/home/views/widgets/task_card.dart';
+import 'package:tasktopia/features/home/bloc/task_bloc.dart';
+import 'package:tasktopia/features/home/bloc/task_state.dart';
+import 'package:tasktopia/features/home/models/task.dart';
 
 class TaskList extends StatefulWidget {
   const TaskList({super.key});
@@ -18,6 +21,7 @@ class _TaskListState extends State<TaskList> {
   void initState() {
     super.initState();
     pageController = PageController(initialPage: 0);
+    context.read<TaskBloc>().loadAllTask();
   }
 
   @override
@@ -35,7 +39,7 @@ class _TaskListState extends State<TaskList> {
                   InkWell(
                     onTap: () {
                       pageController.animateToPage(0,
-                          duration: Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 500),
                           curve: Curves.easeIn);
                       setState(() {
                         currentPage = 0;
@@ -127,7 +131,7 @@ class _TaskListState extends State<TaskList> {
                           color: AppColors.primaryColor,
                         ),
                         padding: const EdgeInsets.all(5),
-                        child: Icon(
+                        child: const Icon(
                           Icons.videogame_asset,
                           color: AppColors.appWhite,
                           size: 35,
@@ -141,7 +145,7 @@ class _TaskListState extends State<TaskList> {
                           borderRadius: BorderRadius.circular(3),
                           color: AppColors.primaryColor,
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.edit,
                           color: AppColors.appWhite,
                           size: 35,
@@ -152,7 +156,7 @@ class _TaskListState extends State<TaskList> {
                 ],
               ),
             ),
-            Divider(
+            const Divider(
               thickness: 2,
               color: AppColors.appBlack,
             ),
@@ -171,20 +175,37 @@ class _TaskListState extends State<TaskList> {
                 ],
               ),
             ),
-            SizedBox(
-              width: AppMeasures.getSize(context).width,
-              height: AppMeasures.getSize(context).height * 0.3,
-              child: PageView(controller: pageController, children: [
-                ListView.builder(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return const TaskCard();
-                  },
-                ),
-                Center(child: Text("Habits")),
-                Center(child: Text("Reminder"))
-              ]),
+            BlocBuilder<TaskBloc, TaskState>(
+              builder: (context, state) {
+                if (state is LoadingTaskState) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is ErrorTaskState) {
+                  return const Center(
+                    child: Text("Something went wrong"),
+                  );
+                } else if (state is SuccessTaskState) {
+                  List<Task> listOfTask = state.tasks;
+                  return SizedBox(
+                    width: AppMeasures.getSize(context).width,
+                    height: AppMeasures.getSize(context).height * 0.3,
+                    child: PageView(controller: pageController, children: [
+                      ListView.builder(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        itemCount: listOfTask.length,
+                        itemBuilder: (context, index) {
+                          return Text(listOfTask[index].description.toString());
+                        },
+                      ),
+                      const Center(child: Text("Habits")),
+                      const Center(child: Text("Reminder"))
+                    ]),
+                  );
+                } else {
+                  return const Center(
+                    child: Text("No Task Shown"),
+                  );
+                }
+              },
             )
           ],
         ),

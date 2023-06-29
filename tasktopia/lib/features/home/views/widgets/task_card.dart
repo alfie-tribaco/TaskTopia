@@ -42,7 +42,7 @@ class _TaskCardState extends State<TaskCard> {
           SizedBox(
             width: AppMeasures.getSize(context).width * 0.02,
           ),
-          Expanded(
+          const Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [Text("High Priority"), Text("5/2/23")],

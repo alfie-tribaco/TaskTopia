@@ -24,7 +24,7 @@ class _OptionListState extends State<OptionList> {
             SizedBox(
               width: AppMeasures.getSize(context).width * 0.05,
             ),
-            OptionItem(
+            const OptionItem(
                 icon: Icon(
                   Icons.pets,
                   size: 35,
@@ -34,7 +34,7 @@ class _OptionListState extends State<OptionList> {
             SizedBox(
               width: AppMeasures.getSize(context).width * 0.05,
             ),
-            OptionItem(
+            const OptionItem(
                 icon: Icon(
                   Icons.shop,
                   size: 35,
@@ -44,7 +44,7 @@ class _OptionListState extends State<OptionList> {
             SizedBox(
               width: AppMeasures.getSize(context).width * 0.05,
             ),
-            OptionItem(
+            const OptionItem(
                 icon: Icon(
                   Icons.emoji_events,
                   size: 35,
@@ -54,7 +54,7 @@ class _OptionListState extends State<OptionList> {
             SizedBox(
               width: AppMeasures.getSize(context).width * 0.05,
             ),
-            OptionItem(
+            const OptionItem(
                 icon: Icon(
                   Icons.settings,
                   size: 35,

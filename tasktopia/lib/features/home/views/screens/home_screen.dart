@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/shared/widgets/app_bar.dart';
 import 'package:tasktopia/features/home/views/widgets/current_task.dart';
@@ -12,9 +13,21 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.list_view,
           backgroundColor: AppColors.primaryColor,
+          overlayOpacity: 0.5,
+          overlayColor: AppColors.appBlack,
+          children: [
+            SpeedDialChild(
+                child: const Icon(Icons.ac_unit_outlined),
+                label: "Habits",
+                backgroundColor: AppColors.primaryColor),
+            SpeedDialChild(
+                child: const Icon(Icons.ac_unit_outlined),
+                label: "Habits",
+                backgroundColor: AppColors.primaryColor),
+          ],
         ),
         appBar: const CustomAppBar(),
         body: const Column(
