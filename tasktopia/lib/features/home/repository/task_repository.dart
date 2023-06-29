@@ -42,8 +42,10 @@ class TaskRepository {
   Future<List<Task>?> retrieveAllTask() async {
     try {
       await openLocalDatabaseConnection();
+
       List<Map<String, Object?>> taskMaps =
           await db!.query(LocalDatabase.tableName);
+
       return taskMaps.map((taskMap) => Task.fromDatabaseJson(taskMap)).toList();
     } catch (e) {
       log(e.toString());

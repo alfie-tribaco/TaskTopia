@@ -21,7 +21,14 @@ class _TaskListState extends State<TaskList> {
   void initState() {
     super.initState();
     pageController = PageController(initialPage: 0);
+
     context.read<TaskBloc>().loadAllTask();
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
   }
 
   @override

@@ -7,10 +7,11 @@ import 'package:tasktopia/app/config/theme/app_theme.dart';
 import 'package:tasktopia/app/utils/constants/app_strings.dart';
 import 'package:tasktopia/app/utils/shared/functions/app_theme_toggle.dart';
 import 'package:tasktopia/features/home/views/screens/home_screen.dart';
+import 'package:tasktopia/services/local_storage/local_database.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
+  LocalDatabase().openLocalDatabase();
   runApp(MultiBlocProvider(
     providers: AppBlocProviders().listOfBlocProviders,
     child: MultiProvider(

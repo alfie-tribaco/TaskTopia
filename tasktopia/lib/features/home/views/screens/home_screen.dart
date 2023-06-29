@@ -30,8 +30,10 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         appBar: const CustomAppBar(),
-        body: const Column(
-          children: [OptionList(), CurrentTask(), TaskList()],
+        body: const SingleChildScrollView(
+          child: Column(
+            children: [OptionList(), CurrentTask(), TaskList()],
+          ),
         ),
       ),
     );

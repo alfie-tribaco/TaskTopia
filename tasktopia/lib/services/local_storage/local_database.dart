@@ -7,6 +7,7 @@ class LocalDatabase {
   static const String columnId = 'id';
   static const String columnTitle = 'title';
   static const String columnSeverity = 'severity';
+  static const String columnDuedate = 'duedate';
   static const String columnDescription = 'description';
 
   late Database? db;
@@ -15,10 +16,15 @@ class LocalDatabase {
     try {
       final dbPath = await getDatabasesPath();
       final path = join(dbPath, 'task_topia_db.db');
+
+      if (await databaseExists(path)) {
+        await deleteDatabase(path);
+      }
       return openDatabase(path, version: 1, onCreate: (db, version) {
         db.execute('''CREATE TABLE $tableName (
-            $columnId NTEGER PRIMARY KEY AUTOINCREMENT,
-            $columnTitle TEXT, duedate TEXT,
+            $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+            $columnTitle TEXT, 
+            $columnDuedate TEXT,
             $columnSeverity TEXT,
             $columnDescription TEXT
                )''');
