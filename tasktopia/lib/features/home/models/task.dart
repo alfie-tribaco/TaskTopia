@@ -1,12 +1,12 @@
 class Task {
   const Task(
-      {required this.id,
+      {this.id,
       required this.description,
       required this.duedate,
       required this.severity,
       required this.title});
 
-  final int id;
+  final int? id;
   final String title;
   final String description;
   final String severity;
@@ -16,9 +16,9 @@ class Task {
     return {
       'id': id,
       'title': title,
-      'description': description,
-      'severity': severity,
       'duedate': duedate,
+      'severity': severity,
+      'description': description,
     };
   }
 

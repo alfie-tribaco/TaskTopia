@@ -17,18 +17,20 @@ class LocalDatabase {
       final dbPath = await getDatabasesPath();
       final path = join(dbPath, 'task_topia_db.db');
 
-      if (await databaseExists(path)) {
-        await deleteDatabase(path);
-      }
-      return openDatabase(path, version: 1, onCreate: (db, version) {
-        db.execute('''CREATE TABLE $tableName (
+      bool isDatabaseExist = await databaseExists(path);
+      if (!isDatabaseExist) {
+        return openDatabase(path, version: 1, onCreate: (db, version) {
+          db.execute('''CREATE TABLE $tableName (
             $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
             $columnTitle TEXT, 
             $columnDuedate TEXT,
             $columnSeverity TEXT,
             $columnDescription TEXT
                )''');
-      });
+        });
+      } else {
+        return openDatabase(path, version: 1);
+      }
     } catch (e) {
       log(e.toString());
       return null;

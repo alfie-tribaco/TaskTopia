@@ -5,6 +5,7 @@ import 'package:tasktopia/app/utils/constants/app_measures.dart';
 import 'package:tasktopia/features/home/bloc/task_bloc.dart';
 import 'package:tasktopia/features/home/bloc/task_state.dart';
 import 'package:tasktopia/features/home/models/task.dart';
+import 'package:tasktopia/features/home/views/widgets/task_card.dart';
 
 class TaskList extends StatefulWidget {
   const TaskList({super.key});
@@ -15,12 +16,12 @@ class TaskList extends StatefulWidget {
 
 class _TaskListState extends State<TaskList> {
   late PageController pageController;
-  int currentPage = 0;
+  int currentPage = 1;
 
   @override
   void initState() {
     super.initState();
-    pageController = PageController(initialPage: 0);
+    pageController = PageController(initialPage: 1);
 
     context.read<TaskBloc>().loadAllTask();
   }
@@ -65,7 +66,14 @@ class _TaskListState extends State<TaskList> {
                                   color: AppColors.primaryColor, width: 3)),
                       height: 40,
                       width: AppMeasures.getSize(context).width * 0.28,
-                      child: const Center(child: Text("Habits")),
+                      child: Center(
+                          child: Text(
+                        "Habits",
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: currentPage == 0
+                                ? AppColors.appWhite
+                                : AppColors.appBlack),
+                      )),
                     ),
                   ),
                   InkWell(
@@ -90,7 +98,15 @@ class _TaskListState extends State<TaskList> {
                                   color: AppColors.primaryColor, width: 3)),
                       height: 40,
                       width: AppMeasures.getSize(context).width * 0.28,
-                      child: const Center(child: Text("Daily Task")),
+                      child: Center(
+                          child: Text("Daily Task",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      color: currentPage == 1
+                                          ? AppColors.appWhite
+                                          : AppColors.appBlack))),
                     ),
                   ),
                   InkWell(
@@ -115,7 +131,15 @@ class _TaskListState extends State<TaskList> {
                                   color: AppColors.primaryColor, width: 3)),
                       height: 40,
                       width: AppMeasures.getSize(context).width * 0.28,
-                      child: const Center(child: Text("Reminder")),
+                      child: Center(
+                          child: Text("Reminder",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      color: currentPage == 2
+                                          ? AppColors.appWhite
+                                          : AppColors.appBlack))),
                     ),
                   ),
                 ],
@@ -140,20 +164,6 @@ class _TaskListState extends State<TaskList> {
                         padding: const EdgeInsets.all(5),
                         child: const Icon(
                           Icons.videogame_asset,
-                          color: AppColors.appWhite,
-                          size: 35,
-                        ),
-                      ),
-                      SizedBox(
-                          width: AppMeasures.getSize(context).width * 0.02),
-                      Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(3),
-                          color: AppColors.primaryColor,
-                        ),
-                        child: const Icon(
-                          Icons.edit,
                           color: AppColors.appWhite,
                           size: 35,
                         ),
@@ -192,20 +202,34 @@ class _TaskListState extends State<TaskList> {
                   );
                 } else if (state is SuccessTaskState) {
                   List<Task> listOfTask = state.tasks;
+
                   return SizedBox(
                     width: AppMeasures.getSize(context).width,
                     height: AppMeasures.getSize(context).height * 0.3,
-                    child: PageView(controller: pageController, children: [
-                      ListView.builder(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        itemCount: listOfTask.length,
-                        itemBuilder: (context, index) {
-                          return Text(listOfTask[index].description.toString());
-                        },
-                      ),
-                      const Center(child: Text("Habits")),
-                      const Center(child: Text("Reminder"))
-                    ]),
+                    child: PageView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        controller: pageController,
+                        children: [
+                          const Center(child: Text("Habits")),
+                          listOfTask.isEmpty
+                              ? const Center(child: Text("No Current Task"))
+                              : ListView.builder(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  itemCount: listOfTask.length,
+                                  itemBuilder: (context, index) {
+                                    return TaskCard(
+                                      description:
+                                          listOfTask[index].description,
+                                      duedate: listOfTask[index].duedate,
+                                      severity: listOfTask[index].severity,
+                                      title: listOfTask[index].title,
+                                      id: listOfTask[index].id!,
+                                    );
+                                  },
+                                ),
+                          const Center(child: Text("Reminder"))
+                        ]),
                   );
                 } else {
                   return const Center(
