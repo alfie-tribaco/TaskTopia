@@ -148,17 +148,13 @@ class _DailyTaskDialogState extends State<DailyTaskDialog> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor),
                       onPressed: () {
-                        context
-                            .read<TaskBloc>()
-                            .addOneTask(Task(
-                                description: taskDescriptionController.text,
-                                duedate: dueDate,
-                                severity: severity,
-                                title: taskTitleController.text))
-                            .then((value) {
-                          Navigator.pop(context);
-                          const SnackBar(content: Text("Success"));
-                        });
+                        context.read<TaskBloc>().addOneTask(Task(
+                            description: taskDescriptionController.text,
+                            duedate: dueDate,
+                            severity: severity,
+                            title: taskTitleController.text));
+
+                        Navigator.pop(context);
                       },
                       child: Text(
                         "Add Task",

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
+import 'package:tasktopia/features/home/bloc/habit_bloc.dart';
+import 'package:tasktopia/features/home/models/habit.dart';
 
 class HabitsDialog extends StatefulWidget {
   const HabitsDialog({super.key});
@@ -61,7 +64,13 @@ class _HabitsDialogState extends State<HabitsDialog> {
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor),
-                      onPressed: () {},
+                      onPressed: () {
+                        context.read<HabitBloc>().addHabit(Habit(
+                              counter: 0,
+                              title: habitTitleController.text,
+                            ));
+                        Navigator.pop(context);
+                      },
                       child: Text(
                         "Add Habit",
                         style: Theme.of(context)

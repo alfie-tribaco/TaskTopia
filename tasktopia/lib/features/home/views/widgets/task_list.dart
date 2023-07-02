@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
+import 'package:tasktopia/app/utils/helper/panel_helper.dart';
+import 'package:tasktopia/features/home/bloc/habit_bloc.dart';
+import 'package:tasktopia/features/home/bloc/habit_state.dart';
+import 'package:tasktopia/features/home/bloc/reminder_bloc.dart';
+import 'package:tasktopia/features/home/bloc/reminder_state.dart';
 import 'package:tasktopia/features/home/bloc/task_bloc.dart';
 import 'package:tasktopia/features/home/bloc/task_state.dart';
-import 'package:tasktopia/features/home/models/task.dart';
+import 'package:tasktopia/features/home/views/widgets/habit_card.dart';
+import 'package:tasktopia/features/home/views/widgets/reminder_card.dart';
 import 'package:tasktopia/features/home/views/widgets/task_card.dart';
 
 class TaskList extends StatefulWidget {
@@ -21,9 +27,14 @@ class _TaskListState extends State<TaskList> {
   @override
   void initState() {
     super.initState();
+    loadLists();
     pageController = PageController(initialPage: 1);
+  }
 
+  loadLists() {
     context.read<TaskBloc>().loadAllTask();
+    context.read<HabitBloc>().loadAllHabits();
+    context.read<ReminderBloc>().retrieveAllReminder();
   }
 
   @override
@@ -47,10 +58,12 @@ class _TaskListState extends State<TaskList> {
                   InkWell(
                     onTap: () {
                       pageController.animateToPage(0,
-                          duration: const Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 1),
                           curve: Curves.easeIn);
+
                       setState(() {
                         currentPage = 0;
+                        context.read<PanelHelper>().changePage(currentPage);
                       });
                     },
                     child: Container(
@@ -79,10 +92,11 @@ class _TaskListState extends State<TaskList> {
                   InkWell(
                     onTap: () {
                       pageController.animateToPage(1,
-                          duration: const Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 1),
                           curve: Curves.easeIn);
                       setState(() {
                         currentPage = 1;
+                        context.read<PanelHelper>().changePage(currentPage);
                       });
                     },
                     child: Container(
@@ -112,10 +126,11 @@ class _TaskListState extends State<TaskList> {
                   InkWell(
                     onTap: () {
                       pageController.animateToPage(2,
-                          duration: const Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 1),
                           curve: Curves.easeIn);
                       setState(() {
                         currentPage = 2;
+                        context.read<PanelHelper>().changePage(currentPage);
                       });
                     },
                     child: Container(
@@ -192,26 +207,49 @@ class _TaskListState extends State<TaskList> {
                 ],
               ),
             ),
-            BlocBuilder<TaskBloc, TaskState>(
-              builder: (context, state) {
-                if (state is LoadingTaskState) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is ErrorTaskState) {
-                  return const Center(
-                    child: Text("Something went wrong"),
-                  );
-                } else if (state is SuccessTaskState) {
-                  List<Task> listOfTask = state.tasks;
+            SizedBox(
+              width: AppMeasures.getSize(context).width,
+              height: AppMeasures.getSize(context).height * 0.3,
+              child: PageView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: pageController,
+                  children: [
+                    BlocBuilder<HabitBloc, HabitState>(
+                      builder: (context, state) {
+                        if (state is LoadingHabitState) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (state is SuccessHabitState) {
+                          var listHabits = state.habits;
 
-                  return SizedBox(
-                    width: AppMeasures.getSize(context).width,
-                    height: AppMeasures.getSize(context).height * 0.3,
-                    child: PageView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        controller: pageController,
-                        children: [
-                          const Center(child: Text("Habits")),
-                          listOfTask.isEmpty
+                          return ListView.builder(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            itemCount: listHabits.length,
+                            itemBuilder: (context, index) {
+                              return HabitCard(
+                                  counter: listHabits[index].counter,
+                                  id: listHabits[index].id!,
+                                  title: listHabits[index].title);
+                            },
+                          );
+                        } else {
+                          return const Center(
+                            child: Text("No Habit Shown"),
+                          );
+                        }
+                      },
+                    ),
+                    BlocBuilder<TaskBloc, TaskState>(
+                      builder: (context, state) {
+                        if (state is LoadingTaskState) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (state is SuccessTaskState) {
+                          var listOfTask = state.tasks;
+
+                          return listOfTask.isEmpty
                               ? const Center(child: Text("No Current Task"))
                               : ListView.builder(
                                   padding:
@@ -227,16 +265,43 @@ class _TaskListState extends State<TaskList> {
                                       id: listOfTask[index].id!,
                                     );
                                   },
-                                ),
-                          const Center(child: Text("Reminder"))
-                        ]),
-                  );
-                } else {
-                  return const Center(
-                    child: Text("No Task Shown"),
-                  );
-                }
-              },
+                                );
+                        } else {
+                          return const Center(
+                            child: Text("No Data shown"),
+                          );
+                        }
+                      },
+                    ),
+                    BlocBuilder<ReminderBloc, ReminderState>(
+                      builder: (context, state) {
+                        if (state is LoadingReminderState) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (state is SuccessReminderState) {
+                          var reminderList = state.listOfReminder;
+                          return ListView.builder(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            itemCount: reminderList.length,
+                            itemBuilder: (context, index) {
+                              return ReminderCard(
+                                  date: reminderList[index].date,
+                                  id: reminderList[index].id!,
+                                  time: reminderList[index].time,
+                                  title: reminderList[index].title);
+                            },
+                          );
+                        } else if (state is ErrorReminderState) {
+                          return const Center(
+                            child: Text("Something went wrong"),
+                          );
+                        } else {
+                          return const Center(child: Text("No Reminder Shown"));
+                        }
+                      },
+                    )
+                  ]),
             )
           ],
         ),

@@ -3,12 +3,26 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class LocalDatabase {
-  static const String tableName = 'tasks';
-  static const String columnId = 'id';
-  static const String columnTitle = 'title';
-  static const String columnSeverity = 'severity';
-  static const String columnDuedate = 'duedate';
-  static const String columnDescription = 'description';
+  //Task Table
+  static const String tableTaskName = 'tasks';
+  static const String columnTaskId = 'id';
+  static const String columnTaskTitle = 'title';
+  static const String columnTaskSeverity = 'severity';
+  static const String columnTaskDuedate = 'duedate';
+  static const String columnTaskDescription = 'description';
+
+//Habit Table
+  static const String tableHabitName = 'habits';
+  static const String columnHabitId = 'id';
+  static const String columnHabitTitle = 'title';
+  static const String columnHabitCounter = 'counter';
+
+  //
+  static const String tableReminderName = 'reminders';
+  static const String columnReminderId = 'id';
+  static const String columnReminderTitle = 'title';
+  static const String columnReminderTime = 'time';
+  static const String columnReminderDate = 'date';
 
   late Database? db;
 
@@ -17,22 +31,34 @@ class LocalDatabase {
       final dbPath = await getDatabasesPath();
       final path = join(dbPath, 'task_topia_db.db');
 
-      bool isDatabaseExist = await databaseExists(path);
-      if (!isDatabaseExist) {
-        return openDatabase(path, version: 1, onCreate: (db, version) {
-          db.execute('''CREATE TABLE $tableName (
-            $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
-            $columnTitle TEXT, 
-            $columnDuedate TEXT,
-            $columnSeverity TEXT,
-            $columnDescription TEXT
+      return openDatabase(
+        path,
+        version: 1,
+        onCreate: (db, version) async {
+          await db.execute('''CREATE TABLE $tableTaskName (
+            $columnTaskId INTEGER PRIMARY KEY AUTOINCREMENT,
+            $columnTaskTitle TEXT, 
+            $columnTaskDuedate TEXT,
+            $columnTaskSeverity TEXT,
+            $columnTaskDescription TEXT
                )''');
-        });
-      } else {
-        return openDatabase(path, version: 1);
-      }
+
+          await db.execute('''CREATE TABLE $tableHabitName (
+            $columnHabitId INTEGER PRIMARY KEY AUTOINCREMENT,
+            $columnHabitTitle TEXT, 
+            $columnHabitCounter INTEGER
+               )''');
+
+          await db.execute('''CREATE TABLE $tableReminderName (
+            $columnReminderId INTEGER PRIMARY KEY AUTOINCREMENT,
+            $columnReminderTitle TEXT, 
+            $columnReminderTime TEXT, 
+            $columnReminderDate TEXT
+               )''');
+        },
+      );
     } catch (e) {
-      log(e.toString());
+      log("LocalDatabase: $e");
       return null;
     }
   }

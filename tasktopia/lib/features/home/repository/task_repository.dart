@@ -13,29 +13,29 @@ class TaskRepository {
   Future<void> addTask(Task task) async {
     try {
       await openLocalDatabaseConnection();
-      await db!.insert(LocalDatabase.tableName, task.toDatabaseJson());
+      await db!.insert(LocalDatabase.tableTaskName, task.toDatabaseJson());
     } catch (e) {
-      log(e.toString());
+      log("Task Repo: $e");
     }
   }
 
   Future<void> removeTask(int id) async {
     try {
       await openLocalDatabaseConnection();
-      await db!.delete(LocalDatabase.tableName,
-          where: '${LocalDatabase.columnId} = ?', whereArgs: [id]);
+      await db!.delete(LocalDatabase.tableTaskName,
+          where: '${LocalDatabase.columnHabitId} = ?', whereArgs: [id]);
     } catch (e) {
-      log(e.toString());
+      log("Task Repo: $e");
     }
   }
 
   Future<void> updateTask(Task task) async {
     try {
       await openLocalDatabaseConnection();
-      await db!.update(LocalDatabase.tableName, task.toDatabaseJson(),
-          where: '${LocalDatabase.columnId} = ?', whereArgs: [task.id]);
+      await db!.update(LocalDatabase.tableTaskName, task.toDatabaseJson(),
+          where: '${LocalDatabase.columnHabitId} = ?', whereArgs: [task.id]);
     } catch (e) {
-      log(e.toString());
+      log("Task Repo: $e");
     }
   }
 
@@ -43,21 +43,33 @@ class TaskRepository {
     try {
       await openLocalDatabaseConnection();
       List<Map<String, Object?>> taskMaps =
-          await db!.query(LocalDatabase.tableName);
+          await db!.query(LocalDatabase.tableTaskName);
       return taskMaps.map((taskMap) => Task.fromDatabaseJson(taskMap)).toList();
     } catch (e) {
-      log(e.toString());
-      return null;
+      if (e is DatabaseException) {
+        return [];
+      } else {
+        log("Task Repo: $e");
+        return null;
+      }
     }
   }
 
-  Future<void> retreiveSpecificTask(int id) async {
+  Future<Task?> retreiveSpecificTask(int id) async {
     try {
       await openLocalDatabaseConnection();
-      db!.query(LocalDatabase.tableName,
-          where: '${LocalDatabase.columnId} = ?', whereArgs: [id]);
+
+      List<Map<String, Object?>> taskMaps = await db!.query(
+          LocalDatabase.tableTaskName,
+          where: '${LocalDatabase.columnHabitId} = ?',
+          whereArgs: [id]);
+      if (taskMaps.isNotEmpty) {
+        return Task.fromDatabaseJson(taskMaps.first);
+      }
     } catch (e) {
-      log(e.toString());
+      log("Task Repo: $e");
+      return null;
     }
+    return null;
   }
 }

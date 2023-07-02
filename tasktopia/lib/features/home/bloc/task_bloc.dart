@@ -13,19 +13,20 @@ class TaskBloc extends Cubit<TaskState> {
     emit(LoadingTaskState());
     try {
       var tasks = await _repository.retrieveAllTask();
-      print(tasks);
       emit(SuccessTaskState(tasks!));
     } catch (e) {
       emit(ErrorTaskState());
-      log(e.toString());
+      log("Task bloc: $e");
     }
   }
 
   Future<void> deleteSpecificTask(int id) async {
     try {
       await _repository.removeTask(id);
-      loadAllTask();
-    } catch (e) {}
+      await loadAllTask();
+    } catch (e) {
+      log("Task bloc: $e");
+    }
   }
 
   Future<void> addOneTask(Task task) async {
@@ -33,7 +34,7 @@ class TaskBloc extends Cubit<TaskState> {
       await _repository.addTask(task);
       await loadAllTask();
     } catch (e) {
-      log(e.toString());
+      log("Task bloc: $e");
     }
   }
 }

@@ -1,5 +1,5 @@
 class Habit {
-  Habit({required this.counter, required this.title, required this.id});
+  Habit({required this.counter, required this.title, this.id});
   int? id;
   String title;
   int counter;

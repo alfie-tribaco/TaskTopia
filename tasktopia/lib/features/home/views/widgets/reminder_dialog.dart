@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
+import 'package:tasktopia/features/home/bloc/reminder_bloc.dart';
+import 'package:tasktopia/features/home/models/reminder.dart';
 
 class ReminderDialog extends StatefulWidget {
   const ReminderDialog({super.key});
@@ -10,6 +13,10 @@ class ReminderDialog extends StatefulWidget {
 }
 
 class _ReminderDialogState extends State<ReminderDialog> {
+  TextEditingController reminderTitleController = TextEditingController();
+  String time = "";
+  String date = "";
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -39,6 +46,7 @@ class _ReminderDialogState extends State<ReminderDialog> {
                 height: AppMeasures.getSize(context).height * 0.04,
               ),
               TextField(
+                controller: reminderTitleController,
                 style: Theme.of(context).textTheme.bodyMedium,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -54,16 +62,27 @@ class _ReminderDialogState extends State<ReminderDialog> {
                 height: AppMeasures.getSize(context).height * 0.03,
               ),
               const Text("When should I remind you ?"),
-              ElevatedButton(onPressed: () {}, child: Text('Set Date')),
               ElevatedButton(
                   onPressed: () {
                     showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime.now());
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime.now())
+                        .then((value) {
+                      date = value.toString();
+                    });
                   },
-                  child: Text('Set Time')),
+                  child: Text('Set Date')),
+              ElevatedButton(
+                  onPressed: () {
+                    showTimePicker(
+                            context: context, initialTime: TimeOfDay.now())
+                        .then((value) {
+                      time = value.toString();
+                    });
+                  },
+                  child: const Text('Set Time')),
               SizedBox(
                 height: AppMeasures.getSize(context).height * 0.03,
               ),
@@ -72,7 +91,13 @@ class _ReminderDialogState extends State<ReminderDialog> {
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor),
-                      onPressed: () {},
+                      onPressed: () {
+                        context.read<ReminderBloc>().addRemider(Reminder(
+                            date: date,
+                            time: time,
+                            title: reminderTitleController.text));
+                        Navigator.pop(context);
+                      },
                       child: Text(
                         "Add Reminder",
                         style: Theme.of(context)

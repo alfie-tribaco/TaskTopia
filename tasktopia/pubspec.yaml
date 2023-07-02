@@ -45,6 +45,7 @@ dependencies:
   path: ^1.8.3
   intl: ^0.18.1
   flutter_slidable: ^3.0.0
+  flutter_local_notifications: ^14.1.1
 
   #Native Splash Configuration
 flutter_native_splash:
