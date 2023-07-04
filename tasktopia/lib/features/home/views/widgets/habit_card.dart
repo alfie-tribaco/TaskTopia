@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
+import 'package:tasktopia/features/home/bloc/habit_bloc.dart';
 import 'package:tasktopia/features/home/bloc/task_bloc.dart';
+import 'package:tasktopia/features/home/models/habit.dart';
 
 class HabitCard extends StatefulWidget {
   const HabitCard(
@@ -50,17 +52,11 @@ class _HabitCardState extends State<HabitCard> {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              Container(
-                height: 50,
-                width: 50,
-                color: AppColors.primaryColor,
-                child: const Icon(Icons.add, color: AppColors.appWhite),
-              ),
               SizedBox(
                 width: AppMeasures.getSize(context).width * 0.02,
               ),
               Expanded(
-                flex: 4,
+                flex: 5,
                 child: SizedBox(
                   child: Column(
                     children: [
@@ -68,6 +64,7 @@ class _HabitCardState extends State<HabitCard> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           widget.title,
+                          overflow: TextOverflow.ellipsis,
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge!
@@ -82,14 +79,54 @@ class _HabitCardState extends State<HabitCard> {
                 width: AppMeasures.getSize(context).width * 0.02,
               ),
               Expanded(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                flex: 4,
+                child: Row(
                   children: [
-                    Text(
-                      widget.counter.toString(),
-                      style: Theme.of(context).textTheme.bodyLarge,
+                    GestureDetector(
+                      onTap: () {
+                        context.read<HabitBloc>().decrementHabit(Habit(
+                            counter: widget.counter,
+                            title: widget.title,
+                            id: widget.id));
+                      },
+                      child: Container(
+                        height: 35,
+                        width: 35,
+                        color: AppColors.appRed,
+                        child:
+                            const Icon(Icons.remove, color: AppColors.appWhite),
+                      ),
+                    ),
+                    SizedBox(
+                      width: AppMeasures.getSize(context).width * 0.02,
+                    ),
+                    SizedBox(
+                      height: 40,
+                      width: 40,
+                      child: Center(
+                        child: Text(
+                          widget.counter.toString(),
+                          overflow: TextOverflow.clip,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: AppMeasures.getSize(context).width * 0.02,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        context.read<HabitBloc>().incrementHabit(Habit(
+                            counter: widget.counter,
+                            title: widget.title,
+                            id: widget.id));
+                      },
+                      child: Container(
+                        height: 35,
+                        width: 35,
+                        color: AppColors.gradientEnd,
+                        child: const Icon(Icons.add, color: AppColors.appWhite),
+                      ),
                     ),
                   ],
                 ),

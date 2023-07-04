@@ -7,7 +7,19 @@ import 'package:tasktopia/features/home/models/task.dart';
 import 'package:intl/intl.dart';
 
 class DailyTaskDialog extends StatefulWidget {
-  const DailyTaskDialog({super.key});
+  const DailyTaskDialog(
+      {super.key,
+      this.description,
+      this.title,
+      this.duedate,
+      this.severity,
+      this.isUpdating});
+
+  final String? title;
+  final String? description;
+  final String? duedate;
+  final String? severity;
+  final bool? isUpdating;
 
   @override
   State<DailyTaskDialog> createState() => _DailyTaskDialogState();
@@ -19,6 +31,25 @@ class _DailyTaskDialogState extends State<DailyTaskDialog> {
   TextEditingController taskDueDateController = TextEditingController();
   String severity = "Low Priority";
   String dueDate = "No Due Date";
+
+  @override
+  void initState() {
+    checkIfIsUpdating();
+    super.initState();
+  }
+
+  checkIfIsUpdating() {
+    if (widget.isUpdating == true) {
+      setState(() {
+        taskTitleController.text = widget.title.toString();
+        taskDescriptionController.text = widget.description.toString();
+        taskDueDateController.text = widget.duedate.toString();
+        severity = widget.severity.toString();
+      });
+    } else {
+      //Do Nothing
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,13 +179,16 @@ class _DailyTaskDialogState extends State<DailyTaskDialog> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor),
                       onPressed: () {
-                        context.read<TaskBloc>().addOneTask(Task(
-                            description: taskDescriptionController.text,
-                            duedate: dueDate,
-                            severity: severity,
-                            title: taskTitleController.text));
-
-                        Navigator.pop(context);
+                        if (widget.isUpdating == true) {
+                          Navigator.pop(context);
+                        } else {
+                          context.read<TaskBloc>().addOneTask(Task(
+                              description: taskDescriptionController.text,
+                              duedate: dueDate,
+                              severity: severity,
+                              title: taskTitleController.text));
+                          Navigator.pop(context);
+                        }
                       },
                       child: Text(
                         "Add Task",

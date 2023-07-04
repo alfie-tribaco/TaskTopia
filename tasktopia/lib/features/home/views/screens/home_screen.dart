@@ -9,7 +9,6 @@ import 'package:tasktopia/features/home/views/widgets/daily_task_dialog.dart';
 import 'package:tasktopia/features/home/views/widgets/habit_statistics.dart';
 import 'package:tasktopia/features/home/views/widgets/habits_dialog.dart';
 import 'package:tasktopia/features/home/views/widgets/next_reminder.dart';
-import 'package:tasktopia/features/home/views/widgets/option_list.dart';
 import 'package:tasktopia/features/home/views/widgets/reminder_dialog.dart';
 import 'package:tasktopia/features/home/views/widgets/task_list.dart';
 

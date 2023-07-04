@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
 import 'package:tasktopia/app/utils/helper/panel_helper.dart';
@@ -12,6 +13,7 @@ import 'package:tasktopia/features/home/bloc/task_state.dart';
 import 'package:tasktopia/features/home/views/widgets/habit_card.dart';
 import 'package:tasktopia/features/home/views/widgets/reminder_card.dart';
 import 'package:tasktopia/features/home/views/widgets/task_card.dart';
+import 'package:tasktopia/features/mini_games/views/screens/mini_game_screen.dart';
 
 class TaskList extends StatefulWidget {
   const TaskList({super.key});
@@ -165,13 +167,36 @@ class _TaskListState extends State<TaskList> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Daily Task",
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  Consumer<PanelHelper>(
+                    builder: (context, value, child) {
+                      if (value.currentPage == 0) {
+                        return Text(
+                          "My Habits",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        );
+                      } else if (value.currentPage == 1) {
+                        return Text(
+                          "Daily Task",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        );
+                      } else {
+                        return Text(
+                          "My Reminder",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        );
+                      }
+                    },
                   ),
-                  SizedBox(
-                    child: Row(children: [
-                      Container(
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return MiniGameScreen();
+                          });
+                    },
+                    child: SizedBox(
+                      child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(3),
                           color: AppColors.primaryColor,
@@ -183,7 +208,7 @@ class _TaskListState extends State<TaskList> {
                           size: 35,
                         ),
                       ),
-                    ]),
+                    ),
                   )
                 ],
               ),
@@ -196,10 +221,7 @@ class _TaskListState extends State<TaskList> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
-                    Icons.expand_rounded,
-                    size: 30,
-                  ),
+                  Spacer(),
                   Icon(
                     Icons.sort,
                     size: 30,
@@ -209,7 +231,7 @@ class _TaskListState extends State<TaskList> {
             ),
             SizedBox(
               width: AppMeasures.getSize(context).width,
-              height: AppMeasures.getSize(context).height * 0.3,
+              height: AppMeasures.getSize(context).height * 0.5,
               child: PageView(
                   physics: const NeverScrollableScrollPhysics(),
                   controller: pageController,
@@ -223,16 +245,19 @@ class _TaskListState extends State<TaskList> {
                         } else if (state is SuccessHabitState) {
                           var listHabits = state.habits;
 
-                          return ListView.builder(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            itemCount: listHabits.length,
-                            itemBuilder: (context, index) {
-                              return HabitCard(
-                                  counter: listHabits[index].counter,
-                                  id: listHabits[index].id!,
-                                  title: listHabits[index].title);
-                            },
-                          );
+                          return listHabits.isEmpty
+                              ? const Center(child: Text("No Current Habits"))
+                              : ListView.builder(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  itemCount: listHabits.length,
+                                  itemBuilder: (context, index) {
+                                    return HabitCard(
+                                        counter: listHabits[index].counter,
+                                        id: listHabits[index].id!,
+                                        title: listHabits[index].title);
+                                  },
+                                );
                         } else {
                           return const Center(
                             child: Text("No Habit Shown"),
@@ -248,7 +273,6 @@ class _TaskListState extends State<TaskList> {
                           );
                         } else if (state is SuccessTaskState) {
                           var listOfTask = state.tasks;
-
                           return listOfTask.isEmpty
                               ? const Center(child: Text("No Current Task"))
                               : ListView.builder(
@@ -281,17 +305,22 @@ class _TaskListState extends State<TaskList> {
                           );
                         } else if (state is SuccessReminderState) {
                           var reminderList = state.listOfReminder;
-                          return ListView.builder(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            itemCount: reminderList.length,
-                            itemBuilder: (context, index) {
-                              return ReminderCard(
-                                  date: reminderList[index].date,
-                                  id: reminderList[index].id!,
-                                  time: reminderList[index].time,
-                                  title: reminderList[index].title);
-                            },
-                          );
+                          return reminderList.isEmpty
+                              ? const Center(
+                                  child: Text("No Current Reminder"),
+                                )
+                              : ListView.builder(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  itemCount: reminderList.length,
+                                  itemBuilder: (context, index) {
+                                    return ReminderCard(
+                                        date: reminderList[index].date,
+                                        id: reminderList[index].id!,
+                                        time: reminderList[index].time,
+                                        title: reminderList[index].title);
+                                  },
+                                );
                         } else if (state is ErrorReminderState) {
                           return const Center(
                             child: Text("Something went wrong"),

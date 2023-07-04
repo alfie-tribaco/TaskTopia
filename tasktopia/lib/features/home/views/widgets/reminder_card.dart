@@ -4,7 +4,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
 import 'package:tasktopia/features/home/bloc/reminder_bloc.dart';
-import 'package:tasktopia/features/home/bloc/task_bloc.dart';
 
 class ReminderCard extends StatefulWidget {
   const ReminderCard(

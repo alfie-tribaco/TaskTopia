@@ -70,4 +70,46 @@ class HabitRepository {
     }
     return null;
   }
+
+  Future<Habit?> retrieveSpecificHabitWithHighestCounter() async {
+    try {
+      await openLocalDatabaseConnection();
+
+      List<Map<String, Object?>> habitMaps = await db!.query(
+        LocalDatabase.tableHabitName,
+        orderBy: '${LocalDatabase.columnHabitCounter} DESC',
+        limit: 1,
+      );
+
+      if (habitMaps.isNotEmpty) {
+        return Habit.fromDatabaseJson(habitMaps.first);
+      }
+    } catch (e) {
+      log("Habit Repo: $e");
+      return null;
+    }
+
+    return null;
+  }
+
+  Future<Habit?> retrieveSpecificHabitWithLowestCounter() async {
+    try {
+      await openLocalDatabaseConnection();
+
+      List<Map<String, Object?>> habitMaps = await db!.query(
+        LocalDatabase.tableHabitName,
+        orderBy: '${LocalDatabase.columnHabitCounter} ASC',
+        limit: 1,
+      );
+
+      if (habitMaps.isNotEmpty) {
+        return Habit.fromDatabaseJson(habitMaps.first);
+      }
+    } catch (e) {
+      log("Habit Repo: $e");
+      return null;
+    }
+
+    return null;
+  }
 }

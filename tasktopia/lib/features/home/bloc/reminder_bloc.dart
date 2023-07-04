@@ -13,6 +13,7 @@ class ReminderBloc extends Cubit<ReminderState> {
   Future<void> addRemider(Reminder reminder) async {
     try {
       await _repository.addReminder(reminder);
+
       retrieveAllReminder();
     } catch (e) {
       log("Reminder Bloc: $e");

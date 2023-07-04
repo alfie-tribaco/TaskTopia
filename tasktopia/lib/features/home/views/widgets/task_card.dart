@@ -4,6 +4,8 @@ import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tasktopia/features/home/bloc/task_bloc.dart';
+import 'package:tasktopia/features/home/views/widgets/daily_task_dialog.dart';
+import 'package:tasktopia/features/home/views/widgets/start_task_dialog.dart';
 
 class TaskCard extends StatefulWidget {
   const TaskCard(
@@ -35,19 +37,48 @@ class _TaskCardState extends State<TaskCard> {
         endActionPane: ActionPane(motion: const DrawerMotion(), children: [
           SlidableAction(
             onPressed: (context) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return StartTaskDialog(
+                      title: widget.title,
+                      duedate: widget.duedate,
+                      id: widget.id,
+                      severity: widget.severity,
+                      description: widget.description);
+                },
+              );
+            },
+            backgroundColor: AppColors.primaryColor,
+            foregroundColor: Colors.white,
+            icon: Icons.start,
+          ),
+          SlidableAction(
+            onPressed: (context) {
               context.read<TaskBloc>().deleteSpecificTask(widget.id);
             },
             backgroundColor: AppColors.appRed,
             foregroundColor: Colors.white,
             icon: Icons.delete,
-            label: 'Delete',
           ),
           SlidableAction(
-            onPressed: (context) {},
+            onPressed: (context) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return DailyTaskDialog(
+                    title: widget.title,
+                    description: widget.description,
+                    duedate: widget.duedate,
+                    severity: widget.severity,
+                    isUpdating: true,
+                  );
+                },
+              );
+            },
             backgroundColor: AppColors.secondaryColor,
             foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: 'Edit',
+            icon: Icons.edit,
           ),
         ]),
         child: Container(

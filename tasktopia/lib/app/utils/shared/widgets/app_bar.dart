@@ -23,20 +23,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
           horizontal: 50,
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset('assets/icon_logo.svg', width: 50),
-            SizedBox(
-              child: Row(
-                children: [
-                  const Text('250'),
-                  SizedBox(
-                    width: AppMeasures.getSize(context).width * 0.02,
-                  ),
-                  SvgPicture.asset('assets/topia_coin.svg'),
-                ],
-              ),
-            )
           ],
         ),
       ),

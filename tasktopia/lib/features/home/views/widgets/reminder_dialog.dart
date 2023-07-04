@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
+import 'package:tasktopia/app/utils/helper/duration_helper.dart';
 import 'package:tasktopia/features/home/bloc/reminder_bloc.dart';
 import 'package:tasktopia/features/home/models/reminder.dart';
+import 'package:tasktopia/services/notification_service/local_notification.dart';
 
 class ReminderDialog extends StatefulWidget {
   const ReminderDialog({super.key});
@@ -14,6 +17,10 @@ class ReminderDialog extends StatefulWidget {
 
 class _ReminderDialogState extends State<ReminderDialog> {
   TextEditingController reminderTitleController = TextEditingController();
+  late int numberOfDays;
+  late int numberOfHours;
+  late int numberOfMinutes;
+  DateTime? dateTimeTime;
   String time = "";
   String date = "";
 
@@ -68,18 +75,45 @@ class _ReminderDialogState extends State<ReminderDialog> {
                             context: context,
                             initialDate: DateTime.now(),
                             firstDate: DateTime.now(),
-                            lastDate: DateTime.now())
+                            lastDate:
+                                DateTime.now().add(const Duration(days: 365)))
                         .then((value) {
-                      date = value.toString();
+                      if (value != null) {
+                        DateTime currentDate = DateTime.now();
+                        Duration difference = value.difference(currentDate);
+                        numberOfDays = difference.inDays;
+                        date = DateFormat.yMMMEd().format(value);
+                      }
                     });
                   },
-                  child: Text('Set Date')),
+                  child: const Text('Set Date')),
               ElevatedButton(
                   onPressed: () {
                     showTimePicker(
                             context: context, initialTime: TimeOfDay.now())
                         .then((value) {
-                      time = value.toString();
+                      if (value != null) {
+                        time = DateFormat('hh:mm a').format(DateTime(
+                            DateTime.now().year,
+                            DateTime.now().month,
+                            DateTime.now().day,
+                            value.hour,
+                            value.minute));
+                        dateTimeTime = DateTime(
+                            DateTime.now().year,
+                            DateTime.now().month,
+                            DateTime.now().day,
+                            value.hour,
+                            value.minute);
+
+                        var differenceForTime =
+                            dateTimeTime!.difference(DateTime.now());
+
+                        print(
+                            "ETO DAI" + differenceForTime.inMinutes.toString());
+                        numberOfHours = differenceForTime.inHours;
+                        numberOfMinutes = differenceForTime.inMinutes;
+                      }
                     });
                   },
                   child: const Text('Set Time')),
@@ -92,10 +126,24 @@ class _ReminderDialogState extends State<ReminderDialog> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor),
                       onPressed: () {
-                        context.read<ReminderBloc>().addRemider(Reminder(
-                            date: date,
-                            time: time,
-                            title: reminderTitleController.text));
+                        context
+                            .read<ReminderBloc>()
+                            .addRemider(Reminder(
+                                date: date,
+                                time: time,
+                                title: reminderTitleController.text))
+                            .whenComplete(() {
+                          LocalNotificationApi.scheduledNotification(
+                            title: reminderTitleController.text,
+                            description:
+                                "I would like to remind your agenda for today",
+                            payload: "test",
+                            duration: Duration(
+                                days: numberOfDays,
+                                hours: numberOfHours,
+                                minutes: numberOfMinutes),
+                          );
+                        });
                         Navigator.pop(context);
                       },
                       child: Text(

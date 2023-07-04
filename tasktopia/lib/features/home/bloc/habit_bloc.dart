@@ -20,7 +20,6 @@ class HabitBloc extends Cubit<HabitState> {
   }
 
   Future<void> addHabit(Habit habit) async {
-    print('test');
     emit(LoadingHabitState());
     try {
       _repository.addHabit(habit);
@@ -28,6 +27,28 @@ class HabitBloc extends Cubit<HabitState> {
     } catch (e) {
       log("Habit bloc: $e");
     }
+  }
+
+  Future<Habit?> retreiveFrequentHabit() async {
+    try {
+      var habit = await _repository.retrieveSpecificHabitWithHighestCounter();
+      print(habit!.title);
+      return habit;
+    } catch (e) {
+      log("Habit bloc: $e");
+    }
+    return null;
+  }
+
+  Future<Habit?> retreiveRareHabit() async {
+    try {
+      var habit = await _repository.retrieveSpecificHabitWithLowestCounter();
+      print(habit!.title);
+      return habit;
+    } catch (e) {
+      log("Habit bloc: $e");
+    }
+    return null;
   }
 
   Future<void> incrementHabit(Habit habit) async {
@@ -44,7 +65,7 @@ class HabitBloc extends Cubit<HabitState> {
   Future<void> decrementHabit(Habit habit) async {
     emit(LoadingHabitState());
     try {
-      habit.counter++;
+      habit.counter--;
       await _repository.updateHabit(habit);
       await loadAllHabits();
     } catch (e) {
