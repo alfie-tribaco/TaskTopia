@@ -52,15 +52,22 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   timezone: ^0.9.2
   flutter_fortune_wheel: ^1.2.1
+  just_audio: ^0.9.34
+
+
+
 
   #Native Splash Configuration
 flutter_native_splash:
   android: true
   image: assets/icon_name_logo.png
   color: "#ffffff"
+
   android_12:
     image: assets/icon_name_logo.png
     color: "#ffffff"
+    
+  web: false
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +93,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - assets/sounds/
     - google_fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
@@ -18,10 +17,10 @@ class _CurrentTaskState extends State<CurrentTask>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Color?> animation;
-
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
@@ -40,7 +39,6 @@ class _CurrentTaskState extends State<CurrentTask>
   @override
   void dispose() {
     _controller.dispose();
-
     super.dispose();
   }
 
@@ -62,6 +60,7 @@ class _CurrentTaskState extends State<CurrentTask>
                         .deleteSpecificTask(value.task.id!)
                         .whenComplete(() {
                       context.read<CurrentTaskHelper>().restartDoneState();
+                      context.read<DurationHelper>().restartDuration();
                     });
                   },
                   child: Container(
@@ -91,75 +90,105 @@ class _CurrentTaskState extends State<CurrentTask>
             ),
           );
         } else if (value.isDone == false) {
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                Text('In Progress Task',
-                    style: Theme.of(context).textTheme.bodyLarge),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    color: animation.value,
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                  width: AppMeasures.getSize(context).width,
-                  height: 80,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Text("Current Task :",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                      color: AppColors.appWhite,
-                                    )),
-                            Text(value.task.title,
-                                overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(color: AppColors.appWhite)),
-                          ],
-                        ),
-                      ),
-                      Consumer<DurationHelper>(
-                        builder: (context, value, child) {
-                          if (value.isEnded == true) {
+          return GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text(
+                      "Are you done with your task ?",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    actions: [
+                      FilledButton(
+                          onPressed: () {
                             context.read<CurrentTaskHelper>().endSpecificTask();
-                          }
-                          return Expanded(
-                            child: Column(
-                              children: [
-                                Text("Time :",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                          color: AppColors.appWhite,
-                                        )),
-                                Text(
-                                  "${value.duration.inMinutes} min ${value.duration.inSeconds % 60} sec",
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Yes")),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Cancel"))
+                    ],
+                  );
+                },
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  Text('In Progress Task',
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      color: animation.value,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
+                    width: AppMeasures.getSize(context).width,
+                    height: 80,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Text("Current Task :",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                        color: AppColors.appWhite,
+                                      )),
+                              Text(value.task.title,
                                   overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyLarge!
-                                      .copyWith(color: AppColors.appWhite),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      )
-                    ],
-                  ),
-                )
-              ],
+                                      .copyWith(color: AppColors.appWhite)),
+                            ],
+                          ),
+                        ),
+                        Consumer<DurationHelper>(
+                          builder: (context, value, child) {
+                            if (value.isEnded == true) {
+                              context
+                                  .read<CurrentTaskHelper>()
+                                  .endSpecificTask();
+                            }
+                            return Expanded(
+                              child: Column(
+                                children: [
+                                  Text("Time :",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                            color: AppColors.appWhite,
+                                          )),
+                                  Text(
+                                    "${value.duration.inMinutes} min ${value.duration.inSeconds % 60} sec",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(color: AppColors.appWhite),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         } else {

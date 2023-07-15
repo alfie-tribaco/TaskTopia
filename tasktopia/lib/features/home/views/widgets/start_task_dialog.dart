@@ -6,9 +6,7 @@ import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
 import 'package:tasktopia/app/utils/helper/duration_helper.dart';
 import 'package:tasktopia/app/utils/helper/task_helper.dart';
-import 'package:tasktopia/features/home/bloc/task_bloc.dart';
 import 'package:tasktopia/features/home/models/task.dart';
-import 'package:tasktopia/features/home/views/widgets/current_task.dart';
 
 class StartTaskDialog extends StatefulWidget {
   const StartTaskDialog(
@@ -30,6 +28,14 @@ class StartTaskDialog extends StatefulWidget {
 }
 
 class _StartTaskDialogState extends State<StartTaskDialog> {
+  late FToast fToast;
+
+  @override
+  void initState() {
+    fToast = FToast();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -143,9 +149,9 @@ class _StartTaskDialogState extends State<StartTaskDialog> {
                             style: FilledButton.styleFrom(
                                 backgroundColor: AppColors.appGrey),
                             onPressed: () {
-                              Fluttertoast.showToast(
-                                  msg:
-                                      "You cannot Start this task without selecting duration");
+                              fToast.showToast(
+                                  child: const Text(
+                                      "You cannot Start this task without selecting duration"));
                             },
                             child: const Text(
                               "Start This Task",

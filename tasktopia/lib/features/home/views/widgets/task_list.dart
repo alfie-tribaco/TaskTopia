@@ -13,7 +13,6 @@ import 'package:tasktopia/features/home/bloc/task_state.dart';
 import 'package:tasktopia/features/home/views/widgets/habit_card.dart';
 import 'package:tasktopia/features/home/views/widgets/reminder_card.dart';
 import 'package:tasktopia/features/home/views/widgets/task_card.dart';
-import 'package:tasktopia/features/mini_games/views/screens/mini_game_screen.dart';
 
 class TaskList extends StatefulWidget {
   const TaskList({super.key});
@@ -187,47 +186,35 @@ class _TaskListState extends State<TaskList> {
                       }
                     },
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return MiniGameScreen();
-                          });
-                    },
-                    child: SizedBox(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(3),
-                          color: AppColors.primaryColor,
-                        ),
-                        padding: const EdgeInsets.all(5),
-                        child: const Icon(
-                          Icons.videogame_asset,
-                          color: AppColors.appWhite,
-                          size: 35,
-                        ),
-                      ),
-                    ),
-                  )
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     showDialog(
+                  //         context: context,
+                  //         builder: (context) {
+                  //           return MiniGameScreen();
+                  //         });
+                  //   },
+                  //   child: SizedBox(
+                  //     child: Container(
+                  //       decoration: BoxDecoration(
+                  //         borderRadius: BorderRadius.circular(3),
+                  //         color: AppColors.primaryColor,
+                  //       ),
+                  //       padding: const EdgeInsets.all(5),
+                  //       child: const Icon(
+                  //         Icons.videogame_asset,
+                  //         color: AppColors.appWhite,
+                  //         size: 35,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // )
                 ],
               ),
             ),
             const Divider(
               thickness: 2,
               color: AppColors.appBlack,
-            ),
-            const SizedBox(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Spacer(),
-                  Icon(
-                    Icons.sort,
-                    size: 30,
-                  )
-                ],
-              ),
             ),
             SizedBox(
               width: AppMeasures.getSize(context).width,
@@ -273,6 +260,7 @@ class _TaskListState extends State<TaskList> {
                           );
                         } else if (state is SuccessTaskState) {
                           var listOfTask = state.tasks;
+
                           return listOfTask.isEmpty
                               ? const Center(child: Text("No Current Task"))
                               : ListView.builder(

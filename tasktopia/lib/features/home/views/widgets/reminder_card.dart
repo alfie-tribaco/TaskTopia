@@ -39,13 +39,13 @@ class _ReminderCardState extends State<ReminderCard> {
             icon: Icons.delete,
             label: 'Delete',
           ),
-          SlidableAction(
-            onPressed: (context) {},
-            backgroundColor: AppColors.secondaryColor,
-            foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: 'Edit',
-          ),
+          // SlidableAction(
+          //   onPressed: (context) {},
+          //   backgroundColor: AppColors.secondaryColor,
+          //   foregroundColor: Colors.white,
+          //   icon: Icons.delete,
+          //   label: 'Edit',
+          // ),
         ]),
         child: Container(
           padding: const EdgeInsets.all(16),

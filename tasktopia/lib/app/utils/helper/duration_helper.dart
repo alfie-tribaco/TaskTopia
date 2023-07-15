@@ -12,7 +12,7 @@ class DurationHelper extends ChangeNotifier {
   }
 
   decrementDuration() {
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       duration = duration - const Duration(seconds: 1);
       if (duration == const Duration(minutes: 0)) {
         timer.cancel();
@@ -21,5 +21,10 @@ class DurationHelper extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  restartDuration() {
+    duration = const Duration(minutes: 0);
+    isEnded = null;
   }
 }

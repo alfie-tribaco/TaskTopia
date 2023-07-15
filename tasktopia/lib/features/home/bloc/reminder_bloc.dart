@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tasktopia/features/home/bloc/reminder_state.dart';
 import 'package:tasktopia/features/home/models/reminder.dart';
@@ -10,10 +9,10 @@ class ReminderBloc extends Cubit<ReminderState> {
 
   final ReminderRepository _repository = ReminderRepository();
 
-  Future<void> addRemider(Reminder reminder) async {
+  Future<void> addRemider(
+      Reminder reminder, int days, int hours, int minutes) async {
     try {
-      await _repository.addReminder(reminder);
-
+      await _repository.addReminder(reminder, days, hours, minutes);
       retrieveAllReminder();
     } catch (e) {
       log("Reminder Bloc: $e");
@@ -38,10 +37,20 @@ class ReminderBloc extends Cubit<ReminderState> {
     }
   }
 
+  Future<Reminder?> getTheUpcomingReminder() async {
+    try {
+      return await _repository.getUpcomingReminder();
+    } catch (e) {
+      log("Reminder Bloc: $e");
+      return null;
+    }
+  }
+
   Future<void> retrieveAllReminder() async {
     emit(LoadingReminderState());
     try {
       var listOfReminder = await _repository.retreiveAllReminders();
+      await getTheUpcomingReminder();
       emit(SuccessReminderState(listOfReminder: listOfReminder!));
     } catch (e) {
       log("Reminder Bloc: $e");

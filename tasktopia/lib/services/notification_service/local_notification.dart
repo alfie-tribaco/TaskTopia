@@ -31,14 +31,12 @@ class LocalNotificationApi {
   }
 
   static Future<void> scheduledNotification(
-      {int id = 0,
+      {required int id,
       required String title,
       required String description,
       required String payload,
       required Duration duration}) async {
     var scheduledDuration = DateTime.now().add(duration);
-
-    print("Duration : $duration");
 
     try {
       await _notifications.zonedSchedule(
@@ -50,6 +48,14 @@ class LocalNotificationApi {
           androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
           uiLocalNotificationDateInterpretation:
               UILocalNotificationDateInterpretation.wallClockTime);
+    } catch (e) {
+      log("Local Notification : $e");
+    }
+  }
+
+  static Future<void> deleteNotification(int id) async {
+    try {
+      await _notifications.cancel(id);
     } catch (e) {
       log("Local Notification : $e");
     }

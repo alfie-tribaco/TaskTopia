@@ -34,6 +34,7 @@ class HomeScreen extends StatelessWidget {
                 label: "Reminder",
                 onTap: () {
                   showDialog(
+                      barrierDismissible: false,
                       context: context,
                       builder: (builder) {
                         return const ReminderDialog();
@@ -45,6 +46,7 @@ class HomeScreen extends StatelessWidget {
                 label: "Daily Task",
                 onTap: () {
                   showDialog(
+                      barrierDismissible: false,
                       context: context,
                       builder: (builder) {
                         return const DailyTaskDialog();
@@ -56,6 +58,7 @@ class HomeScreen extends StatelessWidget {
                 label: "Habits",
                 onTap: () {
                   showDialog(
+                      barrierDismissible: false,
                       context: context,
                       builder: (builder) {
                         return const HabitsDialog();

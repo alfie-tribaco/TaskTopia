@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
+import 'package:tasktopia/features/home/bloc/reminder_bloc.dart';
+import 'package:tasktopia/features/home/models/reminder.dart';
 
 class NextReminder extends StatefulWidget {
   const NextReminder({super.key});
@@ -10,6 +13,11 @@ class NextReminder extends StatefulWidget {
 }
 
 class _NextReminderState extends State<NextReminder> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,20 +35,26 @@ class _NextReminderState extends State<NextReminder> {
             width: AppMeasures.getSize(context).width,
             height: 80,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Name of Task",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(color: AppColors.appWhite)),
-                Text(
-                  "5:00",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(color: AppColors.appWhite),
-                )
+                FutureBuilder<Reminder?>(
+                    future:
+                        context.read<ReminderBloc>().getTheUpcomingReminder(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Text(snapshot.data!.title,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(color: AppColors.appWhite));
+                      } else {
+                        return Text("No Reminder",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(color: AppColors.appWhite));
+                      }
+                    }),
               ],
             ),
           )

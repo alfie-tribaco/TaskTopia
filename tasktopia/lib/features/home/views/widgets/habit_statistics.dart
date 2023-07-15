@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
 import 'package:tasktopia/features/home/bloc/habit_bloc.dart';
-import 'package:tasktopia/features/home/bloc/habit_state.dart';
-import 'package:tasktopia/features/home/bloc/task_bloc.dart';
 import 'package:tasktopia/features/home/models/habit.dart';
 
 class HabitStatistics extends StatefulWidget {
@@ -15,24 +13,9 @@ class HabitStatistics extends StatefulWidget {
 }
 
 class _HabitStatisticsState extends State<HabitStatistics> {
-  Habit? frequentHabit;
-  Habit? rareHabit;
-
   @override
   void initState() {
-    fetchStats();
     super.initState();
-  }
-
-  fetchStats() async {
-    final highestHabit =
-        await context.read<HabitBloc>().retreiveFrequentHabit();
-
-    final lowestHabit = await context.read<HabitBloc>().retreiveRareHabit();
-    setState(() {
-      frequentHabit = highestHabit;
-      rareHabit = lowestHabit;
-    });
   }
 
   @override
@@ -41,7 +24,7 @@ class _HabitStatisticsState extends State<HabitStatistics> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
-          Text('Habit Statistics',
+          Text('Habit Information',
               style: Theme.of(context).textTheme.bodyLarge),
           Container(
             decoration: BoxDecoration(
@@ -66,17 +49,25 @@ class _HabitStatisticsState extends State<HabitStatistics> {
                     ),
                     Expanded(
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         height: 25,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           color: AppColors.appWhite,
                         ),
-                        child: Text(
-                            frequentHabit == null
-                                ? "None"
-                                : frequentHabit!.title,
-                            overflow: TextOverflow.ellipsis),
+                        child: FutureBuilder<Habit?>(
+                            future: context
+                                .read<HabitBloc>()
+                                .retreiveFrequentHabit(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Text(snapshot.data!.title,
+                                    overflow: TextOverflow.ellipsis);
+                              } else {
+                                return const Text("None",
+                                    overflow: TextOverflow.ellipsis);
+                              }
+                            }),
                       ),
                     )
                   ],
@@ -94,16 +85,28 @@ class _HabitStatisticsState extends State<HabitStatistics> {
                     ),
                     Expanded(
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         height: 25,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           color: AppColors.appWhite,
                         ),
-                        child: Text(
-                          rareHabit == null ? "None" : rareHabit!.title,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                        child: FutureBuilder<Habit?>(
+                            future:
+                                context.read<HabitBloc>().retreiveRareHabit(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Text(
+                                  snapshot.data!.title,
+                                  overflow: TextOverflow.ellipsis,
+                                );
+                              } else {
+                                return const Text(
+                                  "None",
+                                  overflow: TextOverflow.ellipsis,
+                                );
+                              }
+                            }),
                       ),
                     )
                   ],

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
-import 'package:tasktopia/app/utils/helper/duration_helper.dart';
+import 'package:tasktopia/app/utils/helper/reminder_helper.dart';
 import 'package:tasktopia/features/home/bloc/reminder_bloc.dart';
 import 'package:tasktopia/features/home/models/reminder.dart';
 import 'package:tasktopia/services/notification_service/local_notification.dart';
@@ -69,54 +70,63 @@ class _ReminderDialogState extends State<ReminderDialog> {
                 height: AppMeasures.getSize(context).height * 0.03,
               ),
               const Text("When should I remind you ?"),
-              ElevatedButton(
-                  onPressed: () {
-                    showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime.now(),
-                            lastDate:
-                                DateTime.now().add(const Duration(days: 365)))
-                        .then((value) {
-                      if (value != null) {
-                        DateTime currentDate = DateTime.now();
-                        Duration difference = value.difference(currentDate);
-                        numberOfDays = difference.inDays;
-                        date = DateFormat.yMMMEd().format(value);
-                      }
-                    });
-                  },
-                  child: const Text('Set Date')),
-              ElevatedButton(
-                  onPressed: () {
-                    showTimePicker(
-                            context: context, initialTime: TimeOfDay.now())
-                        .then((value) {
-                      if (value != null) {
-                        time = DateFormat('hh:mm a').format(DateTime(
-                            DateTime.now().year,
-                            DateTime.now().month,
-                            DateTime.now().day,
-                            value.hour,
-                            value.minute));
-                        dateTimeTime = DateTime(
-                            DateTime.now().year,
-                            DateTime.now().month,
-                            DateTime.now().day,
-                            value.hour,
-                            value.minute);
+              ElevatedButton(onPressed: () {
+                showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime.now().add(const Duration(days: 365)))
+                    .then((value) {
+                  if (value != null) {
+                    DateTime currentDate = DateTime.now();
+                    Duration difference = value.difference(currentDate);
+                    numberOfDays = difference.inDays;
+                    date = DateFormat.yMMMEd().format(value);
+                    context.read<ReminderHelper>().changeDate(date);
+                  }
+                });
+              }, child: Consumer<ReminderHelper>(
+                builder: (context, value, child) {
+                  if (value.date == "") {
+                    return const Text('Set Date');
+                  } else {
+                    return Text(value.date);
+                  }
+                },
+              )),
+              ElevatedButton(onPressed: () {
+                showTimePicker(context: context, initialTime: TimeOfDay.now())
+                    .then((value) {
+                  if (value != null) {
+                    time = DateFormat('hh:mm a').format(DateTime(
+                        DateTime.now().year,
+                        DateTime.now().month,
+                        DateTime.now().day,
+                        value.hour,
+                        value.minute));
+                    dateTimeTime = DateTime(
+                        DateTime.now().year,
+                        DateTime.now().month,
+                        DateTime.now().day,
+                        value.hour,
+                        value.minute);
+                    context.read<ReminderHelper>().changeTimer(time);
+                    var differenceForTime =
+                        dateTimeTime!.difference(DateTime.now());
 
-                        var differenceForTime =
-                            dateTimeTime!.difference(DateTime.now());
-
-                        print(
-                            "ETO DAI" + differenceForTime.inMinutes.toString());
-                        numberOfHours = differenceForTime.inHours;
-                        numberOfMinutes = differenceForTime.inMinutes;
-                      }
-                    });
-                  },
-                  child: const Text('Set Time')),
+                    numberOfHours = differenceForTime.inHours;
+                    numberOfMinutes = differenceForTime.inMinutes;
+                  }
+                });
+              }, child: Consumer<ReminderHelper>(
+                builder: (context, value, child) {
+                  if (value.time == "") {
+                    return const Text("Set Time");
+                  } else {
+                    return Text(value.time);
+                  }
+                },
+              )),
               SizedBox(
                 height: AppMeasures.getSize(context).height * 0.03,
               ),
@@ -126,25 +136,26 @@ class _ReminderDialogState extends State<ReminderDialog> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor),
                       onPressed: () {
-                        context
-                            .read<ReminderBloc>()
-                            .addRemider(Reminder(
-                                date: date,
-                                time: time,
-                                title: reminderTitleController.text))
-                            .whenComplete(() {
-                          LocalNotificationApi.scheduledNotification(
-                            title: reminderTitleController.text,
-                            description:
-                                "I would like to remind your agenda for today",
-                            payload: "test",
-                            duration: Duration(
-                                days: numberOfDays,
-                                hours: numberOfHours,
-                                minutes: numberOfMinutes),
-                          );
-                        });
-                        Navigator.pop(context);
+                        if (reminderTitleController.text != "" &&
+                            time != "" &&
+                            date != "") {
+                          context
+                              .read<ReminderBloc>()
+                              .addRemider(
+                                  Reminder(
+                                      date: date,
+                                      time: time,
+                                      title: reminderTitleController.text),
+                                  numberOfDays,
+                                  numberOfHours,
+                                  numberOfMinutes)
+                              .whenComplete(() {});
+                          context.read<ReminderHelper>().resetState();
+                          Navigator.pop(context);
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Please complete the field");
+                        }
                       },
                       child: Text(
                         "Add Reminder",

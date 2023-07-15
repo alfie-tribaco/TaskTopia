@@ -35,10 +35,10 @@ class _MiniGameScreenState extends State<MiniGameScreen> {
     return Dialog(
       child: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Column(
             children: [
-              Container(
+              SizedBox(
                 width: 200,
                 height: 200,
                 child: FortuneWheel(
@@ -54,12 +54,12 @@ class _MiniGameScreenState extends State<MiniGameScreen> {
                       onPressed: () {
                         selected.add(Random().nextInt(items.length + 1));
                       },
-                      child: Text("Roll Task")),
+                      child: const Text("Roll Task")),
                   ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text("Cancel")),
+                      child: const Text("Cancel")),
                 ],
               )
             ],

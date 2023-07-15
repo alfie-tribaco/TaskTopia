@@ -4,7 +4,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
 import 'package:tasktopia/features/home/bloc/habit_bloc.dart';
-import 'package:tasktopia/features/home/bloc/task_bloc.dart';
 import 'package:tasktopia/features/home/models/habit.dart';
 
 class HabitCard extends StatefulWidget {
@@ -33,22 +32,20 @@ class _HabitCardState extends State<HabitCard> {
         endActionPane: ActionPane(motion: const DrawerMotion(), children: [
           SlidableAction(
             onPressed: (context) {
-              context.read<TaskBloc>().deleteSpecificTask(widget.id);
+              context.read<HabitBloc>().deleteHabit(widget.id);
             },
             backgroundColor: AppColors.appRed,
             foregroundColor: Colors.white,
             icon: Icons.delete,
             label: 'Delete',
           ),
-          SlidableAction(
-            onPressed: (context) {},
-            backgroundColor: AppColors.secondaryColor,
-            foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: 'Edit',
-          ),
         ]),
         child: Container(
+          color: widget.counter < -5
+              ? const Color.fromARGB(255, 255, 199, 199)
+              : widget.counter > 5
+                  ? const Color.fromARGB(255, 226, 255, 242)
+                  : AppColors.appWhite,
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [

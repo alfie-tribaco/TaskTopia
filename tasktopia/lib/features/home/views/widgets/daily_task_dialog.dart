@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tasktopia/app/utils/constants/app_colors.dart';
 import 'package:tasktopia/app/utils/constants/app_measures.dart';
 import 'package:tasktopia/features/home/bloc/task_bloc.dart';
@@ -180,14 +181,26 @@ class _DailyTaskDialogState extends State<DailyTaskDialog> {
                           backgroundColor: AppColors.primaryColor),
                       onPressed: () {
                         if (widget.isUpdating == true) {
-                          Navigator.pop(context);
-                        } else {
-                          context.read<TaskBloc>().addOneTask(Task(
-                              description: taskDescriptionController.text,
-                              duedate: dueDate,
+                          context.read<TaskBloc>().updateSpecificTask(Task(
+                              description: taskTitleController.text,
+                              duedate: taskDescriptionController.text,
                               severity: severity,
                               title: taskTitleController.text));
                           Navigator.pop(context);
+                        } else {
+                          if (taskDescriptionController.text == "" ||
+                              dueDate == "No Due Date" ||
+                              taskTitleController.text == "") {
+                            Fluttertoast.showToast(
+                                msg: "Please Complete input fields");
+                          } else {
+                            context.read<TaskBloc>().addOneTask(Task(
+                                description: taskDescriptionController.text,
+                                duedate: dueDate,
+                                severity: severity,
+                                title: taskTitleController.text));
+                            Navigator.pop(context);
+                          }
                         }
                       },
                       child: Text(

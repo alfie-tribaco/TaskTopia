@@ -32,7 +32,6 @@ class HabitBloc extends Cubit<HabitState> {
   Future<Habit?> retreiveFrequentHabit() async {
     try {
       var habit = await _repository.retrieveSpecificHabitWithHighestCounter();
-      print(habit!.title);
       return habit;
     } catch (e) {
       log("Habit bloc: $e");
@@ -43,7 +42,7 @@ class HabitBloc extends Cubit<HabitState> {
   Future<Habit?> retreiveRareHabit() async {
     try {
       var habit = await _repository.retrieveSpecificHabitWithLowestCounter();
-      print(habit!.title);
+
       return habit;
     } catch (e) {
       log("Habit bloc: $e");

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:tasktopia/app/config/providers/app_bloc_providers.dart';
 import 'package:tasktopia/app/config/providers/app_providers.dart';
@@ -18,6 +17,7 @@ void main() async {
   LocalDatabase().openLocalDatabase();
   AppPermissionHandler().checkPermissionStatus();
   LocalNotificationApi().initLocalNotification();
+
   tz.initializeTimeZones();
   runApp(MultiBlocProvider(
     providers: AppBlocProviders().listOfBlocProviders,

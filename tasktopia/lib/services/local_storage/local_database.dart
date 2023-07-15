@@ -17,7 +17,7 @@ class LocalDatabase {
   static const String columnHabitTitle = 'title';
   static const String columnHabitCounter = 'counter';
 
-  //
+//Reminder Table
   static const String tableReminderName = 'reminders';
   static const String columnReminderId = 'id';
   static const String columnReminderTitle = 'title';
@@ -29,6 +29,7 @@ class LocalDatabase {
   Future<Database?> openLocalDatabase() async {
     try {
       final dbPath = await getDatabasesPath();
+
       final path = join(dbPath, 'task_topia_db.db');
 
       return openDatabase(
@@ -53,7 +54,7 @@ class LocalDatabase {
             $columnReminderId INTEGER PRIMARY KEY AUTOINCREMENT,
             $columnReminderTitle TEXT, 
             $columnReminderTime TEXT, 
-            $columnReminderDate TEXT
+            $columnReminderDate DATE
                )''');
         },
       );
