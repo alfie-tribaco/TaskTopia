@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
     return Consumer<AppThemeToggle>(
       builder: (context, value, child) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: AppStrings.appName,
           theme:
               value.isLightTheme ? AppTheme().lightTheme : AppTheme().darkTheme,

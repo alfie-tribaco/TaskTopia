@@ -1,4 +1,4 @@
-package com.example.tasktopia
+package com.tribaco.tasktopia
 
 import io.flutter.embedding.android.FlutterActivity
 
