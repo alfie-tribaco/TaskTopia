@@ -7,7 +7,6 @@ import 'package:tasktopia/app/utils/constants/app_measures.dart';
 import 'package:tasktopia/app/utils/helper/reminder_helper.dart';
 import 'package:tasktopia/features/home/bloc/reminder_bloc.dart';
 import 'package:tasktopia/features/home/models/reminder.dart';
-import 'package:tasktopia/services/notification_service/local_notification.dart';
 
 class ReminderDialog extends StatefulWidget {
   const ReminderDialog({super.key});

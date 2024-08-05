@@ -15,12 +15,12 @@ class AppPermissionHandler {
       await FlutterLocalNotificationsPlugin()
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
-          ?.requestPermission();
+          ?.requestNotificationsPermission();
     } else if (statusNotification.isPermanentlyDenied) {
       FlutterLocalNotificationsPlugin()
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
-          ?.requestPermission();
+          ?.requestNotificationsPermission();
     }
   }
 
